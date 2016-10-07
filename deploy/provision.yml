@@ -2,8 +2,12 @@
 - hosts: localhost
   remote_user: ansible
   vars:
-     user: {email: lookup('env','PFL_EMAIL'), password: lookup('env', 'PFL_PASSWORD') }
-     download: {folderPath: lookup('env','PFL_FPATH'), formats: lookup('env','PFL_FORMATS'), bookTitles: lookup('env','PFL_BTITLES'), logFile: lookup('env','PFL_LOGFILE')}
+     email: lookup('env','PFL_EMAIL')
+     password: lookup('env', 'PFL_PASSWORD')
+     folderPath: lookup('env','PFL_FPATH')
+     formats: lookup('env','PFL_FORMATS')
+     bookTitles: lookup('env','PFL_BTITLES')
+     logFile: lookup('env','PFL_LOGFILE')
   tasks:
     - name: Clone the repo
       git: repo=https://github.com/brunifrancesco/Packt-Publishing-Free-Learning.git
@@ -17,4 +21,3 @@
       template: src=pfl/configFileTemplate.cfg dest=pfl/configFile.cfg
     - name: create crontab file
       shell: chdir=pfl echo "* * * * * python packtPublishingFreeEbook.py -gl" > crontab
-    -
