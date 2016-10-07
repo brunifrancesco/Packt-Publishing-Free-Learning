@@ -149,7 +149,7 @@ class FreeEBookGrabber(object):
         if(r.status_code is 200):
             print("[SUCCESS] - eBook: '" + self.bookTitle +"' has been succesfully grabbed !")
             if log:
-                self.get_info(r)
+                return self.get_info(r)
         else:
             raise requests.exceptions.RequestException("eBook:" + self.bookTitle +" has not been grabbed~! ,http GET status code != 200")
 
