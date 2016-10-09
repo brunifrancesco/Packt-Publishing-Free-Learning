@@ -1,5 +1,6 @@
 #! /bin/bash
 
+ansible-playbook run.yml -c local
 cd pfl
 devcron.py crontab &
-service nginx start
+nginx -g 'daemon off;'

@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  remote_user: ansible
+  vars:
+     email: "{{lookup('env','PFL_EMAIL')}}"
+     password: "{{lookup('env', 'PFL_PASSWORD')}}"
+     folderPath: "{{lookup('env','PFL_FPATH')}}"
+     formats: "{{lookup('env','PFL_FORMATS')}}"
+     bookTitles: "{{lookup('env','PFL_BTITLES')}}"
+     logFile: "{{lookup('env','PFL_LOGFILE')}}"
+     cronExpression: "{{lookup('env','PFL_CRONEXPR')}}"
+  tasks:
+    - name: merge config template
+      template: src=/pfl/configFileTemplate.cfg dest=pfl/configFile.cfg
+    - name: create crontab file
+      copy: content="{{ cronExpression }} python packtPublishingFreeEbook.py -gl" dest=/pfl/crontab

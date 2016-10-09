@@ -12,5 +12,6 @@ RUN apt-get install -y software-properties-common nano git nginx
 RUN ansible-playbook provision.yml -c local
 
 ADD run.sh run.sh
+ADD run.yml run.yml
 RUN chmod u+x run.sh
 CMD ["./run.sh"]

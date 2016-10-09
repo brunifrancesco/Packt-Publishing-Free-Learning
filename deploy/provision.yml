@@ -8,16 +8,15 @@
      formats: lookup('env','PFL_FORMATS')
      bookTitles: lookup('env','PFL_BTITLES')
      logFile: lookup('env','PFL_LOGFILE')
+     cronExpression: lookup('env', 'CRON'
   tasks:
     - name: Clone the repo
       git: repo=https://github.com/brunifrancesco/Packt-Publishing-Free-Learning.git
-         dest=pfl
+         dest=/pfl
          version=master
     - name: Install deps
-      pip: requirements=pfl/requirements.txt
+      pip: requirements=/pfl/requirements.txt
     - name: Install devcron
       pip: name=https://bitbucket.org/dbenamy/devcron/get/tip.tar.gz
     - name: merge config template
-      template: src=pfl/configFileTemplate.cfg dest=pfl/configFile.cfg
-    - name: create crontab file
-      shell: chdir=pfl echo "* * * * * python packtPublishingFreeEbook.py -gl" > crontab
+      template: src=/pfl/configFileTemplate.cfg dest=pfl/configFile.cfg
