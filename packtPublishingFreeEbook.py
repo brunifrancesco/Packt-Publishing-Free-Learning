@@ -56,10 +56,10 @@ class PacktAccountData(object):
         Write result to file
         :param data: the data to be writted down
         """
-        with open(self.log_file, "a") as output:
+        with open(self.log_file, "ab") as output:
             output.write(str("\n"))
             for key, value in data.items():
-                output.write(str('%s --> %s\n' % (key.upper(), value)))
+                output.write('%s --> %s\n'.encode("UTF-8") % (key.upper(), value))
         print("[INFO] Complete informations for '%s' have been saved" % data["title"])
 
     def __get_log_filename(self):
@@ -231,37 +231,42 @@ class BookDownloader(object):
                             raise requests.exceptions.RequestException("Cannot download "+title)                            
         print("[INFO] - " + str(nrOfBooksDownloaded)+" eBooks have been downloaded !")
 
-
+cfgFilePath= os.path.join(os.getcwd(),"configFile.cfg")
+myAccount = PacktAccountData(cfgFilePath)
+downloader = BookDownloader(myAccount)
+grabber = FreeEBookGrabber(myAccount)
+result = grabber.grabEbook(log=True)
+myAccount.write_result(result)
             
-if __name__ == '__main__':
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-g","--grab", help="grabs daily ebook",action="store_true")
-    parser.add_argument("-gl", "--grabl", help= "grabs and log data", action="store_true")
-    parser.add_argument("-gd","--grabd", help="grabs daily ebook and downloads the title afterwards",action="store_true")
-    parser.add_argument("-da","--dall", help="downloads all ebooks from your account",action="store_true")
-    parser.add_argument("-dc","--dchosen", help="downloads chosen titles described in [downloadBookTitles] field",action="store_true")
-    args = parser.parse_args()
-    cfgFilePath= os.path.join(os.getcwd(),"configFile.cfg")
-    try:
-        myAccount = PacktAccountData(cfgFilePath)
-        downloader = BookDownloader(myAccount)
-        if args.grabl:
-            grabber = FreeEBookGrabber(myAccount)
-            result = grabber.grabEbook(log=True)
-            myAccount.write_result(result)
-        if args.grab or args.grabd:
-            grabber =FreeEBookGrabber(myAccount)
-            grabber.grabEbook()
-        if args.grabd or args.dall or args.dchosen:
-            downloader.getDataOfAllMyBooks()
-        if args.grabd:
-            downloader.downloadBooks([grabber.bookTitle])
-        elif args.dall:
-            downloader.downloadBooks()
-        elif args.dchosen:
-            downloader.downloadBooks(myAccount.downloadBookTitles)
-        print("[SUCCESS] - good, looks like all went well! :-)")
-    except Exception as e:
-        print("[ERROR] - Exception occured %s"% e)
+# if __name__ == '__main__':
 #
+#     parser = argparse.ArgumentParser()
+#     parser.add_argument("-g","--grab", help="grabs daily ebook",action="store_true")
+#     parser.add_argument("-gl", "--grabl", help= "grabs and log data", action="store_true")
+#     parser.add_argument("-gd","--grabd", help="grabs daily ebook and downloads the title afterwards",action="store_true")
+#     parser.add_argument("-da","--dall", help="downloads all ebooks from your account",action="store_true")
+#     parser.add_argument("-dc","--dchosen", help="downloads chosen titles described in [downloadBookTitles] field",action="store_true")
+#     args = parser.parse_args()
+#     cfgFilePath= os.path.join(os.getcwd(),"configFile.cfg")
+#     try:
+#         myAccount = PacktAccountData(cfgFilePath)
+#         downloader = BookDownloader(myAccount)
+#         if args.grabl:
+#             grabber = FreeEBookGrabber(myAccount)
+#             result = grabber.grabEbook(log=True)
+#             myAccount.write_result(result)
+#         if args.grab or args.grabd:
+#             grabber =FreeEBookGrabber(myAccount)
+#             grabber.grabEbook()
+#         if args.grabd or args.dall or args.dchosen:
+#             downloader.getDataOfAllMyBooks()
+#         if args.grabd:
+#             downloader.downloadBooks([grabber.bookTitle])
+#         elif args.dall:
+#             downloader.downloadBooks()
+#         elif args.dchosen:
+#             downloader.downloadBooks(myAccount.downloadBookTitles)
+#         print("[SUCCESS] - good, looks like all went well! :-)")
+#     except Exception as e:
+#         print("[ERROR] - Exception occured %s"% e)
+# #
